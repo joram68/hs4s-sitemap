@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HS4S Finance</title>
+
+<style>
+
+body {
+    font-family: Georgia, serif;
+    background: transparent;
+    color: inherit;
+    padding: 16px;
+}
+
+.finance-box {
+    max-width: 850px;
+    margin-left: 30px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+
+input, select {
+
+    padding: 8px;
+
+    border: 1.5px solid rgba(120,120,120,0.8);
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: inherit;
+
+    font-family: Georgia, serif;
+
+}
+
+
+button {
+
+    padding: 8px 14px;
+
+    border: 1.5px solid rgba(120,120,120,0.8);
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: inherit;
+
+    cursor: pointer;
+
+    font-family: Georgia, serif;
+
+}
+
+
+button:hover {
+
+    opacity: 0.7;
+
+}
+
+
+.saldo-box {
+
+    border-bottom: 1px solid rgba(120,120,120,0.4);
+
+    padding: 10px 0;
+
+    margin-bottom: 15px;
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+th {
+
+    text-align: left;
+
+    border-bottom: 2px solid rgba(120,120,120,0.5);
+
+    padding: 8px;
+
+}
+
+
+td {
+
+    padding: 8px;
+
+    border-bottom: 1px solid rgba(120,120,120,0.3);
+
+}
+
+
+.verwijder {
+
+    cursor:pointer;
+
+    border:1px solid rgba(120,120,120,0.8);
+
+    padding:3px 7px;
+
+    border-radius:4px;
+
+}
+
+
+.totaal {
+
+    margin-top:20px;
+
+    border-top:1px solid rgba(120,120,120,0.5);
+
+    padding-top:10px;
+
+    font-size:16px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="finance-box">
+
+
+<h2>💰 HS4S Finance</h2>
+
+
+<div class="saldo-box">
+
+<label>Beginsaldo:</label>
+
+<input id="beginSaldo" type="number" step="0.01">
+
+<button onclick="bewaarSaldo()">Opslaan</button>
+
+<br><br>
+
+<b>Huidig saldo:</b>
+
+€ <span id="saldo">0.00</span>
+
+</div>
+
+
+<h3>Nieuwe transactie</h3>
+
+
+<input id="datum" type="date">
+
+
+<input id="omschrijving" placeholder="Omschrijving">
+
+
+<select id="categorie">
+
+<option>Wonen</option>
+<option>Voeding</option>
+<option>Auto</option>
+<option>Hobby</option>
+<option>Reizen</option>
+<option>Gezondheid</option>
+<option>Diversen</option>
+
+</select>
+
+
+<input id="inkomst" type="number" placeholder="Inkomst">
+
+
+<input id="uitgave" type="number" placeholder="Uitgave">
+
+
+<button onclick="toevoegen()">+</button>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Datum</th>
+<th>Omschrijving</th>
+<th>Categorie</th>
+<th>In</th>
+<th>Uit</th>
+<th>Saldo</th>
+<th></th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="lijst">
+
+</tbody>
+
+
+</table>
+
+
+<div class="totaal">
+
+<b>Totaal inkomsten:</b>
+€ <span id="totaalIn">0.00</span>
+<br>
+
+<b>Totaal uitgaven:</b>
+€ <span id="totaalUit">0.00</span>
+
+</div>
