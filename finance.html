@@ -239,3 +239,199 @@ td {
 € <span id="totaalUit">0.00</span>
 
 </div>
+    <script>
+
+let transacties = JSON.parse(
+    localStorage.getItem("HS4S_finance")
+) || [];
+
+let beginsaldo = 
+    parseFloat(localStorage.getItem("HS4S_beginsaldo")) || 0;
+
+
+// Beginsaldo tonen
+
+document.getElementById("beginSaldo").value = beginsaldo;
+
+
+
+function bewaarSaldo(){
+
+    beginsaldo = parseFloat(
+        document.getElementById("beginSaldo").value
+    ) || 0;
+
+    localStorage.setItem(
+        "HS4S_beginsaldo",
+        beginsaldo
+    );
+
+    tonen();
+
+}
+
+
+
+// Nieuwe transactie toevoegen
+
+function toevoegen(){
+
+    let item = {
+
+        datum:
+        document.getElementById("datum").value,
+
+        omschrijving:
+        document.getElementById("omschrijving").value,
+
+        categorie:
+        document.getElementById("categorie").value,
+
+        inkomst:
+        parseFloat(document.getElementById("inkomst").value) || 0,
+
+        uitgave:
+        parseFloat(document.getElementById("uitgave").value) || 0
+
+    };
+
+
+    if(item.omschrijving === ""){
+
+        alert("Vul een omschrijving in");
+
+        return;
+
+    }
+
+
+    transacties.push(item);
+
+
+    localStorage.setItem(
+        "HS4S_finance",
+        JSON.stringify(transacties)
+    );
+
+
+    document.getElementById("omschrijving").value="";
+    document.getElementById("inkomst").value="";
+    document.getElementById("uitgave").value="";
+
+
+    tonen();
+
+}
+
+
+
+// Alles tonen
+
+function tonen(){
+
+    let lijst = document.getElementById("lijst");
+
+    lijst.innerHTML="";
+
+
+    let saldo = beginsaldo;
+
+    let totaalIn = 0;
+    let totaalUit = 0;
+
+
+
+    transacties.forEach(function(t,index){
+
+
+        saldo += t.inkomst;
+        saldo -= t.uitgave;
+
+
+        totaalIn += t.inkomst;
+        totaalUit += t.uitgave;
+
+
+
+        let rij = document.createElement("tr");
+
+
+        rij.innerHTML = `
+
+        <td>${t.datum}</td>
+
+        <td>${t.omschrijving}</td>
+
+        <td>${t.categorie}</td>
+
+        <td>€ ${t.inkomst.toFixed(2)}</td>
+
+        <td>€ ${t.uitgave.toFixed(2)}</td>
+
+        <td>€ ${saldo.toFixed(2)}</td>
+
+        <td>
+        <span class="verwijder" onclick="wissen(${index})">
+        🗑
+        </span>
+        </td>
+
+        `;
+
+
+        lijst.appendChild(rij);
+
+
+    });
+
+
+
+    document.getElementById("saldo").innerHTML =
+    saldo.toFixed(2);
+
+
+    document.getElementById("totaalIn").innerHTML =
+    totaalIn.toFixed(2);
+
+
+    document.getElementById("totaalUit").innerHTML =
+    totaalUit.toFixed(2);
+
+
+}
+
+
+
+// Verwijderen
+
+function wissen(index){
+
+
+    transacties.splice(index,1);
+
+
+    localStorage.setItem(
+        "HS4S_finance",
+        JSON.stringify(transacties)
+    );
+
+
+    tonen();
+
+
+}
+
+
+
+// Start
+
+tonen();
+
+
+</script>
+
+
+</div>
+
+</body>
+</html>
