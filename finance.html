@@ -16,7 +16,7 @@ body {
 }
 
 .finance-box {
-    max-width: 850px;
+    max-width: 900px;
     margin-left: 30px;
 }
 
@@ -25,13 +25,9 @@ h2 {
     margin-bottom: 15px;
 }
 
-h3 {
-    font-size: 16px;
-    margin-top: 20px;
-}
+input, select, button {
 
-
-input, select {
+    font-family: Georgia, serif;
 
     padding: 8px;
 
@@ -42,79 +38,74 @@ input, select {
     background: transparent;
 
     color: inherit;
-
-    font-family: Georgia, serif;
 
 }
 
 
 button {
 
-    padding: 8px 14px;
-
-    border: 1.5px solid rgba(120,120,120,0.8);
-
-    border-radius: 4px;
-
-    background: transparent;
-
-    color: inherit;
-
     cursor: pointer;
 
-    font-family: Georgia, serif;
+}
+
+
+input {
+
+    width: 120px;
 
 }
 
 
-button:hover {
+.omschrijving {
 
-    opacity: 0.7;
+    width: 180px;
 
 }
 
 
-.saldo-box {
+.saldo {
 
-    border-bottom: 1px solid rgba(120,120,120,0.4);
+    margin-bottom:20px;
 
-    padding: 10px 0;
+    padding-bottom:10px;
 
-    margin-bottom: 15px;
+    border-bottom:1px solid rgba(120,120,120,0.4);
 
 }
 
 
 table {
 
-    width: 100%;
+    width:100%;
 
-    border-collapse: collapse;
+    border-collapse:collapse;
+
+    margin-top:20px;
 
 }
 
 
 th {
 
-    text-align: left;
+    text-align:left;
 
-    border-bottom: 2px solid rgba(120,120,120,0.5);
+    border-bottom:2px solid rgba(120,120,120,0.5);
 
-    padding: 8px;
+    padding:8px;
 
 }
 
 
 td {
 
-    padding: 8px;
+    padding:8px;
 
-    border-bottom: 1px solid rgba(120,120,120,0.3);
+    border-bottom:1px solid rgba(120,120,120,0.3);
 
 }
 
 
-.verwijder {
+.delete {
 
     cursor:pointer;
 
@@ -127,15 +118,13 @@ td {
 }
 
 
-.totaal {
+.totalen {
 
     margin-top:20px;
 
-    border-top:1px solid rgba(120,120,120,0.5);
+    border-top:1px solid rgba(120,120,120,0.4);
 
     padding-top:10px;
-
-    font-size:16px;
 
 }
 
@@ -154,30 +143,33 @@ td {
 <h2>💰 HS4S Finance</h2>
 
 
-<div class="saldo-box">
+<div class="saldo">
 
-<label>Beginsaldo:</label>
+Beginsaldo:
 
 <input id="beginSaldo" type="number" step="0.01">
 
-<button onclick="bewaarSaldo()">Opslaan</button>
+<button onclick="opslaanSaldo()">Opslaan</button>
+
 
 <br><br>
+
 
 <b>Huidig saldo:</b>
 
 € <span id="saldo">0.00</span>
 
+
 </div>
 
 
-<h3>Nieuwe transactie</h3>
+
+<h3>Nieuwe invoer</h3>
 
 
 <input id="datum" type="date">
 
-
-<input id="omschrijving" placeholder="Omschrijving">
+<input id="omschrijving" class="omschrijving" placeholder="Omschrijving">
 
 
 <select id="categorie">
@@ -187,7 +179,6 @@ td {
 <option>Auto</option>
 <option>Hobby</option>
 <option>Reizen</option>
-<option>Gezondheid</option>
 <option>Diversen</option>
 
 </select>
@@ -195,11 +186,11 @@ td {
 
 <input id="inkomst" type="number" placeholder="Inkomst">
 
-
 <input id="uitgave" type="number" placeholder="Uitgave">
 
 
 <button onclick="toevoegen()">+</button>
+
 
 
 <table>
@@ -221,7 +212,7 @@ td {
 </thead>
 
 
-<tbody id="lijst">
+<tbody id="tabel">
 
 </tbody>
 
@@ -229,209 +220,248 @@ td {
 </table>
 
 
-<div class="totaal">
+<div class="totalen">
 
 <b>Totaal inkomsten:</b>
 € <span id="totaalIn">0.00</span>
+
 <br>
 
 <b>Totaal uitgaven:</b>
 € <span id="totaalUit">0.00</span>
 
-</div>
-    <script>
 
-let transacties = JSON.parse(
-    localStorage.getItem("HS4S_finance")
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+let gegevens = JSON.parse(
+localStorage.getItem("HS4S_finance")
 ) || [];
 
-let beginsaldo = 
-    parseFloat(localStorage.getItem("HS4S_beginsaldo")) || 0;
+
+let beginsaldo =
+Number(localStorage.getItem("HS4S_beginsaldo")) || 0;
 
 
-// Beginsaldo tonen
 
 document.getElementById("beginSaldo").value = beginsaldo;
 
 
 
-function bewaarSaldo(){
+function opslaanSaldo(){
 
-    beginsaldo = parseFloat(
-        document.getElementById("beginSaldo").value
-    ) || 0;
+beginsaldo =
+Number(document.getElementById("beginSaldo").value) || 0;
 
-    localStorage.setItem(
-        "HS4S_beginsaldo",
-        beginsaldo
-    );
 
-    tonen();
+localStorage.setItem(
+"HS4S_beginsaldo",
+beginsaldo
+);
+
+
+tonen();
 
 }
 
 
-
-// Nieuwe transactie toevoegen
 
 function toevoegen(){
 
-    let item = {
 
-        datum:
-        document.getElementById("datum").value,
-
-        omschrijving:
-        document.getElementById("omschrijving").value,
-
-        categorie:
-        document.getElementById("categorie").value,
-
-        inkomst:
-        parseFloat(document.getElementById("inkomst").value) || 0,
-
-        uitgave:
-        parseFloat(document.getElementById("uitgave").value) || 0
-
-    };
+let regel = {
 
 
-    if(item.omschrijving === ""){
-
-        alert("Vul een omschrijving in");
-
-        return;
-
-    }
+datum: document.getElementById("datum").value,
 
 
-    transacties.push(item);
+omschrijving:
+document.getElementById("omschrijving").value,
 
 
-    localStorage.setItem(
-        "HS4S_finance",
-        JSON.stringify(transacties)
-    );
+categorie:
+document.getElementById("categorie").value,
 
 
-    document.getElementById("omschrijving").value="";
-    document.getElementById("inkomst").value="";
-    document.getElementById("uitgave").value="";
+inkomst:
+Number(document.getElementById("inkomst").value) || 0,
 
 
-    tonen();
+uitgave:
+Number(document.getElementById("uitgave").value) || 0
+
+
+};
+
+
+
+if(regel.omschrijving === ""){
+
+alert("Vul een omschrijving in");
+
+return;
 
 }
 
 
 
-// Alles tonen
+gegevens.push(regel);
+
+
+
+localStorage.setItem(
+
+"HS4S_finance",
+
+JSON.stringify(gegevens)
+
+);
+
+
+
+document.getElementById("omschrijving").value="";
+document.getElementById("inkomst").value="";
+document.getElementById("uitgave").value="";
+
+
+
+tonen();
+
+
+}
+
+
+
 
 function tonen(){
 
-    let lijst = document.getElementById("lijst");
 
-    lijst.innerHTML="";
-
-
-    let saldo = beginsaldo;
-
-    let totaalIn = 0;
-    let totaalUit = 0;
+let tabel =
+document.getElementById("tabel");
 
 
-
-    transacties.forEach(function(t,index){
-
-
-        saldo += t.inkomst;
-        saldo -= t.uitgave;
+tabel.innerHTML="";
 
 
-        totaalIn += t.inkomst;
-        totaalUit += t.uitgave;
+let saldo = beginsaldo;
+
+let totaalIn = 0;
+
+let totaalUit = 0;
 
 
 
-        let rij = document.createElement("tr");
+gegevens.forEach(function(regel,index){
 
 
-        rij.innerHTML = `
+saldo += regel.inkomst;
 
-        <td>${t.datum}</td>
-
-        <td>${t.omschrijving}</td>
-
-        <td>${t.categorie}</td>
-
-        <td>€ ${t.inkomst.toFixed(2)}</td>
-
-        <td>€ ${t.uitgave.toFixed(2)}</td>
-
-        <td>€ ${saldo.toFixed(2)}</td>
-
-        <td>
-        <span class="verwijder" onclick="wissen(${index})">
-        🗑
-        </span>
-        </td>
-
-        `;
+saldo -= regel.uitgave;
 
 
-        lijst.appendChild(rij);
+totaalIn += regel.inkomst;
 
-
-    });
+totaalUit += regel.uitgave;
 
 
 
-    document.getElementById("saldo").innerHTML =
-    saldo.toFixed(2);
+let rij =
+document.createElement("tr");
 
 
-    document.getElementById("totaalIn").innerHTML =
-    totaalIn.toFixed(2);
+
+rij.innerHTML =
+
+`
+
+<td>${regel.datum}</td>
+
+<td>${regel.omschrijving}</td>
+
+<td>${regel.categorie}</td>
+
+<td>€ ${regel.inkomst.toFixed(2)}</td>
+
+<td>€ ${regel.uitgave.toFixed(2)}</td>
+
+<td>€ ${saldo.toFixed(2)}</td>
+
+<td>
+<span class="delete" onclick="verwijder(${index})">
+🗑
+</span>
+</td>
+
+`;
 
 
-    document.getElementById("totaalUit").innerHTML =
-    totaalUit.toFixed(2);
+
+tabel.appendChild(rij);
+
+
+
+});
+
+
+
+document.getElementById("saldo").innerHTML =
+saldo.toFixed(2);
+
+
+document.getElementById("totaalIn").innerHTML =
+totaalIn.toFixed(2);
+
+
+document.getElementById("totaalUit").innerHTML =
+totaalUit.toFixed(2);
+
 
 
 }
 
 
 
-// Verwijderen
-
-function wissen(index){
+function verwijder(index){
 
 
-    transacties.splice(index,1);
+gegevens.splice(index,1);
 
 
-    localStorage.setItem(
-        "HS4S_finance",
-        JSON.stringify(transacties)
-    );
+
+localStorage.setItem(
+
+"HS4S_finance",
+
+JSON.stringify(gegevens)
+
+);
 
 
-    tonen();
+
+tonen();
 
 
 }
 
 
 
-// Start
+document.getElementById("datum").value =
+new Date().toISOString().substring(0,10);
+
+
 
 tonen();
 
 
 </script>
 
-
-</div>
 
 </body>
 </html>
