@@ -46,7 +46,7 @@ h2 {
     gap: 6px;
 }
 
-/* Invoervak vult beschikbare breedte */
+/* Wit invoervak zoals bij weerbericht */
 #tekst {
     flex: 1;
     width: 100%;
@@ -54,18 +54,19 @@ h2 {
     padding: 6px;
     border: 1px solid #aaa;
     border-radius: 4px;
-    background: transparent;
-    color: inherit;
+    background: #ffffff;
+    color: #333333;
     font-family: Arial, sans-serif;
     font-size: 12px;
     outline: none;
 }
 
 #tekst::placeholder {
-    opacity: 0.6;
+    color: #777777;
+    opacity: 1;
 }
 
-/* Plusknop */
+/* Grijze plusknop */
 #plus-knop {
     appearance: none;
     -webkit-appearance: none;
@@ -209,7 +210,6 @@ function tonen() {
 
         li.appendChild(tekst);
         li.appendChild(verwijder);
-
         lijst.appendChild(li);
     });
 }
