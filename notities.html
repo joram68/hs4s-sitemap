@@ -59,11 +59,11 @@ input::placeholder {
     opacity: 0.6;
 }
 
-/* + knop MET kader */
-button.toevoegen-knop {
+/* + knop met rand */
+.toevoegen-knop {
     padding: 10px 14px;
-    border: 1.9px solid rgba(120,120,120,1);
     border-radius: 4px;
+    border: 1.9px solid rgba(120,120,120,1);
     background: transparent;
     color: inherit;
     cursor: pointer;
@@ -78,7 +78,7 @@ ul {
 li {
     list-style: none;
     padding: 4px 0;
-    margin: 0;
+    margin-bottom: 0;
     border-bottom: 1px solid rgba(120,120,120,0.35);
     display: flex;
     justify-content: space-between;
@@ -93,32 +93,20 @@ li {
     overflow-wrap: anywhere;
 }
 
-/* Prullenmand ZONDER kader */
-button.verwijder {
-    appearance: none;
-    -webkit-appearance: none;
-    border: 0 !important;
-    outline: 0;
-    box-shadow: none !important;
-    background: transparent !important;
-    border-radius: 0;
-    padding: 2px 0;
-    margin: 0;
-    font-family: inherit;
-    font-size: 16px;
-    line-height: 1;
-    color: inherit;
+/* Prullenmand met oorspronkelijke rand */
+.verwijder {
     cursor: pointer;
+    border: 1.5px solid rgba(120,120,120,1);
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-size: 16px;
+    background: transparent;
+    color: inherit;
     flex-shrink: 0;
 }
 
-button.verwijder:hover {
+.verwijder:hover {
     opacity: 0.6;
-}
-
-button.verwijder:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
 }
 
 </style>
@@ -139,7 +127,6 @@ button.verwijder:focus-visible {
 >
 
 <button
-    type="button"
     class="toevoegen-knop"
     onclick="toevoegen()">+</button>
 
@@ -178,14 +165,9 @@ function tonen() {
         tekst.className = "notitie-tekst";
         tekst.textContent = item;
 
-        let verwijder = document.createElement("button");
+        let verwijder = document.createElement("span");
         verwijder.className = "verwijder";
-        verwijder.type = "button";
         verwijder.textContent = "🗑";
-        verwijder.setAttribute(
-            "aria-label",
-            "Notitie verwijderen"
-        );
 
         verwijder.onclick = function() {
             wissen(index);
