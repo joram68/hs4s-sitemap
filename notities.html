@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -7,29 +8,40 @@
 <title>HS4S Snelle Notitie</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
 
 body {
     font-family: Georgia, serif;
     background: transparent;
     color: inherit;
-    padding: 5px;
+    margin: 0;
+    padding: 3px;
 }
 
 .notitie-box {
-    max-width: 300px;
+    max-width: 400px;
     width: 100%;
-    margin: 0 auto;
+    margin: 0;
 }
 
 h2 {
-    margin: 0 0 20px 0;
+    margin: 0 0 12px 0;
     font-size: 18px;
     font-weight: bold;
 }
 
+.invoer-regel {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
 input {
-    width: 75%;
-    padding: 10px;
+    flex: 1;
+    min-width: 0;
+    padding: 10px 6px;
     border-radius: 4px;
     border: 1.9px solid rgba(120,120,120,1);
     background: transparent;
@@ -42,7 +54,7 @@ input::placeholder {
 }
 
 button {
-    padding: 10px 14px;
+    padding: 10px 12px;
     border-radius: 4px;
     border: 1.9px solid rgba(120,120,120,1);
     background: transparent;
@@ -52,7 +64,8 @@ button {
 
 ul {
     padding: 0;
-    margin-top: 15px;
+    margin: 10px 0 0 0;
+    width: 100%;
 }
 
 li {
@@ -63,6 +76,13 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+}
+
+li .notitie-tekst {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .verwijder {
@@ -71,10 +91,10 @@ li {
     border-radius: 4px;
     padding: 3px 7px;
     font-size: 16px;
+    flex-shrink: 0;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -83,18 +103,21 @@ li {
 
 <h2>📝 Snelle notitie</h2>
 
-<input 
-id="tekst"
-placeholder="Nieuwe notitie..."
-onkeydown="enterToevoegen(event)"
+<div class="invoer-regel">
+
+<input
+    id="tekst"
+    placeholder="Nieuwe notitie..."
+    onkeydown="enterToevoegen(event)"
 >
 
 <button onclick="toevoegen()">+</button>
 
+</div>
+
 <ul id="lijst"></ul>
 
 </div>
-
 
 <script>
 
@@ -102,8 +125,7 @@ let notities = JSON.parse(
     localStorage.getItem("HS4S_notities")
 ) || [];
 
-
-function opslaan(){
+function opslaan() {
 
     localStorage.setItem(
         "HS4S_notities",
@@ -112,23 +134,29 @@ function opslaan(){
 
 }
 
-
-function tonen(){
+function tonen() {
 
     let lijst = document.getElementById("lijst");
 
     lijst.innerHTML = "";
 
-    notities.forEach(function(item,index){
+    notities.forEach(function(item, index) {
 
         let li = document.createElement("li");
 
-        li.innerHTML = `
-        <span>${item}</span>
-        <span class="verwijder" onclick="wissen(${index})">
-        🗑
-        </span>
-        `;
+        let tekst = document.createElement("span");
+        tekst.className = "notitie-tekst";
+        tekst.textContent = item;
+
+        let verwijder = document.createElement("span");
+        verwijder.className = "verwijder";
+        verwijder.textContent = "🗑";
+        verwijder.onclick = function() {
+            wissen(index);
+        };
+
+        li.appendChild(tekst);
+        li.appendChild(verwijder);
 
         lijst.appendChild(li);
 
@@ -136,12 +164,11 @@ function tonen(){
 
 }
 
-
-function toevoegen(){
+function toevoegen() {
 
     let veld = document.getElementById("tekst");
 
-    if(veld.value.trim() !== ""){
+    if (veld.value.trim() !== "") {
 
         notities.push(veld.value);
 
@@ -151,14 +178,15 @@ function toevoegen(){
 
         tonen();
 
+        veld.focus();
+
     }
 
 }
 
+function enterToevoegen(event) {
 
-function enterToevoegen(event){
-
-    if(event.key === "Enter"){
+    if (event.key === "Enter") {
 
         toevoegen();
 
@@ -166,17 +194,15 @@ function enterToevoegen(event){
 
 }
 
+function wissen(index) {
 
-function wissen(index){
-
-    notities.splice(index,1);
+    notities.splice(index, 1);
 
     opslaan();
 
     tonen();
 
 }
-
 
 tonen();
 
