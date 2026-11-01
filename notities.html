@@ -37,8 +37,6 @@ h2 {
     font-weight: bold;
 }
 
-/* Invoerregel */
-
 .invoer-regel {
     display: flex;
     align-items: stretch;
@@ -65,8 +63,6 @@ h2 {
     opacity: 1;
 }
 
-/* Plus- en opslaanknop */
-
 #plus-knop {
     appearance: none;
     -webkit-appearance: none;
@@ -86,8 +82,6 @@ h2 {
     background: #636363;
 }
 
-/* Annuleerknop */
-
 #annuleer-knop {
     display: none;
     background: #777777;
@@ -103,8 +97,6 @@ h2 {
     background: #555555;
 }
 
-/* Notitielijst */
-
 ul {
     padding: 0;
     margin: 14px 0 0 0;
@@ -116,16 +108,13 @@ li {
     width: 100%;
     padding: 10px 12px;
     margin: 0 0 9px 0;
-
     background: rgba(147,147,147,0.12);
     border: 1px solid rgba(147,147,147,0.40);
     border-radius: 6px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-
     min-height: 42px;
 }
 
@@ -136,8 +125,6 @@ li {
     font-size: 14px;
     line-height: 1.5;
 }
-
-/* Knoppen rechts */
 
 .notitie-acties {
     display: flex;
@@ -163,12 +150,6 @@ li {
     opacity: 0.6;
 }
 
-.bewerken:focus-visible,
-.verwijder:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-}
-
 </style>
 </head>
 
@@ -183,18 +164,11 @@ li {
 <input
     id="tekst"
     placeholder="Nieuwe notitie..."
-    onkeydown="enterToevoegen(event)"
 >
 
-<button
-    id="plus-knop"
-    type="button"
-    onclick="toevoegen()">+</button>
+<button id="plus-knop" type="button">+</button>
 
-<button
-    id="annuleer-knop"
-    type="button"
-    onclick="annuleerBewerken()">✕</button>
+<button id="annuleer-knop" type="button">✕</button>
 
 </div>
 
@@ -204,180 +178,209 @@ li {
 
 <script>
 
-let notities = JSON.parse(
-    localStorage.getItem("HS4S_notities")
-) || [];
+(function() {
 
-let bewerkIndex = null;
+    let notities = [];
 
-/* Opslaan */
+    let bewerkIndex = null;
 
-function opslaan() {
-    localStorage.setItem(
-        "HS4S_notities",
-        JSON.stringify(notities)
-    );
-}
+    const f = document.getElementById("tekst");
+    const plus = document.getElementById("plus-knop");
+    const annuleer = document.getElementById("annuleer-knop");
+    const lijst = document.getElementById("lijst");
 
-/* Notities tonen */
+    // Bestaande notities ophalen
 
-function tonen() {
+    try {
+        notities = JSON.parse(
+            localStorage.getItem("HS4S_notities") || "[]"
+        );
 
-    let lijst = document.getElementById("lijst");
-    lijst.innerHTML = "";
-
-    notities.forEach(function(item, index) {
-
-        let li = document.createElement("li");
-
-        let tekst = document.createElement("span");
-        tekst.className = "notitie-tekst";
-        tekst.textContent = item;
-
-        // Knoppen samenvoegen
-
-        let acties = document.createElement("div");
-        acties.className = "notitie-acties";
-
-        // Bewerken
-
-        let bewerken = document.createElement("button");
-        bewerken.className = "bewerken";
-        bewerken.type = "button";
-        bewerken.textContent = "✏️";
-        bewerken.setAttribute("aria-label", "Notitie bewerken");
-
-        bewerken.onclick = function() {
-            startBewerken(index);
-        };
-
-        // Verwijderen
-
-        let verwijder = document.createElement("button");
-        verwijder.className = "verwijder";
-        verwijder.type = "button";
-        verwijder.textContent = "🗑";
-        verwijder.setAttribute("aria-label", "Notitie verwijderen");
-
-        verwijder.onclick = function() {
-            wissen(index);
-        };
-
-        acties.appendChild(bewerken);
-        acties.appendChild(verwijder);
-
-        li.appendChild(tekst);
-        li.appendChild(acties);
-
-        lijst.appendChild(li);
-    });
-}
-
-/* Nieuwe notitie toevoegen of bewerken opslaan */
-
-function toevoegen() {
-
-    let veld = document.getElementById("tekst");
-    let nieuweTekst = veld.value.trim();
-
-    if (nieuweTekst === "") {
-        return;
+        if (!Array.isArray(notities)) {
+            notities = [];
+        }
+    } catch (e) {
+        notities = [];
     }
 
-    if (bewerkIndex !== null) {
+    // Opslaan
 
-        // Bestaande notitie aanpassen
-        notities[bewerKIndex()] = nieuweTekst;
-
-    } else {
-
-        // Nieuwe notitie toevoegen
-        notities.push(nieuweTekst);
-
+    function opslaan() {
+        localStorage.setItem(
+            "HS4S_notities",
+            JSON.stringify(notities)
+        );
     }
 
-    opslaan();
+    // Weergave
 
-    veld.value = "";
-    stopBewerken();
-    tonen();
+    function tonen() {
 
-    veld.focus();
-}
+        lijst.innerHTML = "";
 
-/* Bewerken starten */
+        notities.forEach(function(item, index) {
 
-function startBewerken(index) {
+            const li = document.createElement("li");
 
-    let veld = document.getElementById("tekst");
+            const tekst = document.createElement("span");
+            tekst.className = "notitie-tekst";
+            tekst.textContent = item;
 
-    bewerkIndex = index;
+            const acties = document.createElement("div");
+            acties.className = "notitie-acties";
 
-    veld.value = notities[index];
-    veld.placeholder = "Notitie bewerken...";
+            // Bewerken
 
-    document.getElementById("plus-knop").textContent = "✓";
-    document.getElementById("annuleer-knop").style.display = "block";
+            const bewerken = document.createElement("button");
+            bewerken.type = "button";
+            bewerken.className = "bewerken";
+            bewerken.textContent = "✏️";
+            bewerken.title = "Notitie bewerken";
 
-    veld.focus();
-}
+            bewerken.addEventListener("click", function() {
+                startBewerken(index);
+            });
 
-/* Bewerken annuleren */
+            // Verwijderen
 
-function annuleerBewerken() {
+            const verwijderen = document.createElement("button");
+            verwijderen.type = "button";
+            verwijderen.className = "verwijder";
+            verwijderen.textContent = "🗑";
+            verwijderen.title = "Notitie verwijderen";
 
-    document.getElementById("tekst").value = "";
+            verwijderen.addEventListener("click", function() {
+                wissen(index);
+            });
 
-    stopBewerken();
+            acties.appendChild(bewerken);
+            acties.appendChild(verwijderen);
 
-}
+            li.appendChild(tekst);
+            li.appendChild(acties);
 
-/* Bewerken afsluiten */
+            lijst.appendChild(li);
 
-function stopBewerken() {
-
-    bewerkIndex = null;
-
-    document.getElementById("tekst").placeholder = "Nieuwe notitie...";
-    document.getElementById("plus-knop").textContent = "+";
-    document.getElementById("annuleer-knop").style.display = "none";
-
-}
-
-function bewerKIndex() {
-    return bewerkIndex;
-}
-
-/* Enter gebruiken */
-
-function enterToevoegen(event) {
-
-    if (event.key === "Enter") {
-        event.preventDefault();
-        toevoegen();
+        });
     }
-}
 
-/* Notitie verwijderen */
+    // Nieuwe notitie of bestaande notitie opslaan
 
-function wissen(index) {
+    function toevoegen() {
 
-    notities.splice(index, 1);
+        const nieuweTekst = f.value.trim();
 
-    if (bewerkIndex === index) {
-        document.getElementById("tekst").value = "";
+        if (!nieuweTekst) {
+            f.focus();
+            return;
+        }
+
+        if (bewerkIndex !== null) {
+
+            notities[bewerkIndex] = nieuweTekst;
+
+        } else {
+
+            notities.push(nieuweTekst);
+
+        }
+
+        opslaan();
+
+        f.value = "";
+
         stopBewerken();
-    } else if (bewerkIndex !== null && index < bewerkIndex) {
-        bewerkIndex--;
+
+        tonen();
+
+        f.focus();
     }
 
-    opslaan();
+    // Bewerken starten
+
+    function startBewerken(index) {
+
+        bewerkIndex = index;
+
+        f.value = notities[index];
+        f.placeholder = "Notitie bewerken...";
+
+        plus.textContent = "✓";
+        annuleer.style.display = "block";
+
+        f.focus();
+    }
+
+    // Bewerken annuleren
+
+    function annuleerBewerken() {
+
+        f.value = "";
+
+        stopBewerken();
+
+        f.focus();
+    }
+
+    // Bewerken afsluiten
+
+    function stopBewerken() {
+
+        bewerkIndex = null;
+
+        f.placeholder = "Nieuwe notitie...";
+
+        plus.textContent = "+";
+
+        annuleer.style.display = "none";
+    }
+
+    // Verwijderen
+
+    function wissen(index) {
+
+        notities.splice(index, 1);
+
+        if (bewerkIndex === index) {
+
+            f.value = "";
+            stopBewerken();
+
+        } else if (bewerkIndex !== null && index < bewerkIndex) {
+
+            bewerkIndex--;
+
+        }
+
+        opslaan();
+
+        tonen();
+    }
+
+    // Knoppen koppelen
+
+    plus.addEventListener("click", toevoegen);
+
+    annuleer.addEventListener("click", annuleerBewerken);
+
+    f.addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            event.preventDefault();
+            toevoegen();
+        }
+
+        if (event.key === "Escape" && bewerkIndex !== null) {
+            annuleerBewerken();
+        }
+
+    });
+
+    // Starten
+
     tonen();
-}
 
-/* Starten */
-
-tonen();
+})();
 
 </script>
 
