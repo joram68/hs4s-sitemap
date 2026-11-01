@@ -19,22 +19,31 @@ html, body {
 }
 
 body {
-    font-family: Georgia, serif;
+    font-family: Arial, sans-serif;
     background: transparent;
-    color: inherit;
+    color: #333333;
 }
+
+/* Buitenste witte kaart */
 
 .notitie-box {
     width: 100%;
-    max-width: 480px;
-    margin: 0;
-    padding: 10px 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 32px 36px 36px;
+
+    background: #ffffff;
+    border: 2px solid #dddddd;
+    border-radius: 24px;
 }
 
+/* Titel */
+
 h2 {
-    margin: 0 0 35px 0;
-    font-size: 18px;
+    margin: 0 0 30px 0;
+    font-size: 30px;
     font-weight: bold;
+    color: #333333;
 }
 
 /* Invoerregel */
@@ -43,42 +52,53 @@ h2 {
     display: flex;
     align-items: stretch;
     width: 100%;
-    gap: 6px;
+    gap: 8px;
 }
 
 #tekst {
     flex: 1;
     width: 100%;
     min-width: 0;
-    padding: 8px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
+    padding: 13px 15px;
+
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+
     background: #ffffff;
     color: #333333;
+
     font-family: Arial, sans-serif;
-    font-size: 13px;
+    font-size: 17px;
     outline: none;
 }
 
-#tekst::placeholder {
-    color: #777777;
-    opacity: 1;
+#tekst:focus {
+    border-color: #999999;
 }
 
-/* Plus- en opslaanknop */
+#tekst::placeholder {
+    color: #888888;
+}
+
+/* Toevoegen en opslaan */
 
 #plus-knop {
     appearance: none;
     -webkit-appearance: none;
+
     flex-shrink: 0;
     background: #939393;
     color: white;
+
     border: none;
-    border-radius: 4px;
-    padding: 6px 14px;
+    border-radius: 8px;
+
+    padding: 10px 20px;
+
     font-family: Arial, sans-serif;
-    font-size: 15px;
+    font-size: 20px;
     cursor: pointer;
+
     transition: background 0.2s;
 }
 
@@ -86,17 +106,21 @@ h2 {
     background: #636363;
 }
 
-/* Annuleerknop */
+/* Annuleren */
 
 #annuleer-knop {
     display: none;
+
     background: #777777;
     color: white;
+
     border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
+    border-radius: 8px;
+
+    padding: 10px 15px;
+
     cursor: pointer;
-    font-size: 13px;
+    font-size: 18px;
 }
 
 #annuleer-knop:hover {
@@ -107,62 +131,123 @@ h2 {
 
 ul {
     padding: 0;
-    margin: 14px 0 0 0;
+    margin: 22px 0 0 0;
     width: 100%;
 }
 
-/* Witte vakjes voor de notities */
+/* Individuele notitiekaart */
 
 li {
     list-style: none;
     width: 100%;
-    padding: 10px 12px;
-    margin: 0 0 9px 0;
 
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
+    padding: 22px 25px;
+    margin: 0 0 16px 0;
+
+    background: #f1f1f1;
+
+    border: none;
+    border-left: 9px solid #aaaaaa;
+    border-radius: 19px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 18px;
 
-    min-height: 42px;
+    min-height: 90px;
 }
+
+/* Notitietekst */
 
 .notitie-tekst {
     flex: 1;
     min-width: 0;
+
     overflow-wrap: anywhere;
-    font-size: 14px;
+
+    font-size: 21px;
     line-height: 1.5;
+    color: #333333;
 }
 
-/* Knoppen rechts */
+/* Actieknoppen */
 
 .notitie-acties {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
     flex-shrink: 0;
 }
 
 .bewerken,
 .verwijder {
     display: inline-block;
+
     cursor: pointer;
     border: none;
     background: transparent;
-    padding: 2px;
+
+    padding: 4px;
     margin: 0;
-    font-size: 17px;
+
+    font-size: 22px;
     line-height: 1;
 }
 
 .bewerken:hover,
 .verwijder:hover {
-    opacity: 0.6;
+    opacity: 0.55;
+}
+
+.bewerken:focus-visible,
+.verwijder:focus-visible {
+    outline: 2px solid #888888;
+    outline-offset: 3px;
+}
+
+/* Smartphone */
+
+@media (max-width: 600px) {
+
+    .notitie-box {
+        padding: 20px 16px 22px;
+        border-radius: 18px;
+    }
+
+    h2 {
+        font-size: 23px;
+        margin-bottom: 22px;
+    }
+
+    li {
+        padding: 17px 15px;
+        border-left-width: 7px;
+        border-radius: 14px;
+        min-height: 70px;
+        gap: 10px;
+    }
+
+    .notitie-tekst {
+        font-size: 17px;
+    }
+
+    .notitie-acties {
+        gap: 8px;
+    }
+
+    .bewerken,
+    .verwijder {
+        font-size: 19px;
+    }
+
+    #tekst {
+        font-size: 15px;
+    }
+
+    #plus-knop {
+        padding: 8px 15px;
+    }
 }
 
 </style>
@@ -172,22 +257,22 @@ li {
 
 <div class="notitie-box">
 
-<h2>📝 Snelle notitie</h2>
+    <h2>📝 HS4S – Snelle notitie</h2>
 
-<div class="invoer-regel">
+    <div class="invoer-regel">
 
-<input
-    id="tekst"
-    placeholder="Nieuwe notitie..."
->
+        <input
+            id="tekst"
+            placeholder="Nieuwe notitie..."
+        >
 
-<button id="plus-knop" type="button">+</button>
+        <button id="plus-knop" type="button">+</button>
 
-<button id="annuleer-knop" type="button">✕</button>
+        <button id="annuleer-knop" type="button">✕</button>
 
-</div>
+    </div>
 
-<ul id="lijst"></ul>
+    <ul id="lijst"></ul>
 
 </div>
 
@@ -196,7 +281,6 @@ li {
 (function() {
 
     let notities = [];
-
     let bewerkIndex = null;
 
     const f = document.getElementById("tekst");
@@ -214,6 +298,7 @@ li {
         if (!Array.isArray(notities)) {
             notities = [];
         }
+
     } catch (e) {
         notities = [];
     }
@@ -221,10 +306,12 @@ li {
     // Opslaan
 
     function opslaan() {
+
         localStorage.setItem(
             "HS4S_notities",
             JSON.stringify(notities)
         );
+
     }
 
     // Notities tonen
@@ -247,6 +334,7 @@ li {
             // Bewerken
 
             const bewerken = document.createElement("button");
+
             bewerken.type = "button";
             bewerken.className = "bewerken";
             bewerken.textContent = "✏️";
@@ -259,6 +347,7 @@ li {
             // Verwijderen
 
             const verwijderen = document.createElement("button");
+
             verwijderen.type = "button";
             verwijderen.className = "verwijder";
             verwijderen.textContent = "🗑";
@@ -277,6 +366,7 @@ li {
             lijst.appendChild(li);
 
         });
+
     }
 
     // Nieuwe notitie of bestaande notitie opslaan
@@ -309,6 +399,7 @@ li {
         tonen();
 
         f.focus();
+
     }
 
     // Bewerken starten
@@ -324,6 +415,7 @@ li {
         annuleer.style.display = "block";
 
         f.focus();
+
     }
 
     // Bewerken annuleren
@@ -335,6 +427,7 @@ li {
         stopBewerken();
 
         f.focus();
+
     }
 
     // Bewerken afsluiten
@@ -348,6 +441,7 @@ li {
         plus.textContent = "+";
 
         annuleer.style.display = "none";
+
     }
 
     // Notitie verwijderen
@@ -370,6 +464,7 @@ li {
         opslaan();
 
         tonen();
+
     }
 
     // Knoppen koppelen
