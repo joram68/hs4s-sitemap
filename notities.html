@@ -38,8 +38,8 @@ body {
 /* Titel */
 
 h2 {
-    margin: 0 0 30px 0;
-    font-size: 30px;
+    margin: 0 0 24px 0;
+    font-size: 23px;
     font-weight: bold;
     color: #333333;
 }
@@ -50,20 +50,20 @@ h2 {
     display: flex;
     align-items: stretch;
     width: 100%;
-    gap: 8px;
+    gap: 6px;
 }
 
 #tekst {
     flex: 1;
     width: 100%;
     min-width: 0;
-    padding: 13px 15px;
+    padding: 9px 11px;
     border: 1px solid #cccccc;
-    border-radius: 8px;
+    border-radius: 6px;
     background: #ffffff;
     color: #333333;
     font-family: Arial, sans-serif;
-    font-size: 17px;
+    font-size: 14px;
     outline: none;
 }
 
@@ -84,10 +84,10 @@ h2 {
     background: #939393;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
+    border-radius: 6px;
+    padding: 7px 13px;
     font-family: Arial, sans-serif;
-    font-size: 20px;
+    font-size: 17px;
     cursor: pointer;
     transition: background 0.2s;
 }
@@ -103,10 +103,10 @@ h2 {
     background: #777777;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 10px 15px;
+    border-radius: 6px;
+    padding: 7px 11px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 #annuleer-knop:hover {
@@ -117,46 +117,44 @@ h2 {
 
 ul {
     padding: 0;
-    margin: 22px 0 0 0;
+    margin: 20px 0 0 0;
     width: 100%;
-
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
-/* Notitiekaart aangepast aan tekst */
+/* Alle notities even breed als het invoervak */
 
 li {
     list-style: none;
-
-    width: fit-content;
+    width: 100%;
     max-width: 100%;
 
-    padding: 16px 20px;
-    margin: 0 0 12px 0;
+    padding: 8px 6px 8px 9px;
+    margin: 0 0 9px 0;
 
     background: #f1f1f1;
     border: none;
-    border-left: 9px solid #aaaaaa;
-    border-radius: 16px;
+    border-left: 5px solid #aaaaaa;
+    border-radius: 11px;
 
-    display: inline-flex;
-    justify-content: flex-start;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 18px;
+    gap: 6px;
 
-    min-height: 65px;
+    min-height: 43px;
 }
 
 /* Notitietekst */
 
 .notitie-tekst {
-    flex: 0 1 auto;
+    flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
-    font-size: 19px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.4;
     color: #333333;
 }
 
@@ -165,7 +163,7 @@ li {
 .notitie-acties {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 5px;
     flex-shrink: 0;
 }
 
@@ -175,9 +173,9 @@ li {
     cursor: pointer;
     border: none;
     background: transparent;
-    padding: 4px;
+    padding: 2px;
     margin: 0;
-    font-size: 21px;
+    font-size: 16px;
     line-height: 1;
 }
 
@@ -196,37 +194,39 @@ li {
     }
 
     h2 {
-        font-size: 23px;
-        margin-bottom: 22px;
+        font-size: 20px;
+        margin-bottom: 18px;
     }
 
     li {
-        padding: 13px 14px;
-        border-left-width: 7px;
-        border-radius: 13px;
-        min-height: 55px;
-        gap: 10px;
+        padding: 7px 5px 7px 8px;
+        border-left-width: 4px;
+        border-radius: 9px;
+        min-height: 39px;
+        gap: 5px;
     }
 
     .notitie-tekst {
-        font-size: 17px;
+        font-size: 14px;
     }
 
     .notitie-acties {
-        gap: 8px;
+        gap: 4px;
     }
 
     .bewerken,
     .verwijder {
-        font-size: 19px;
+        font-size: 15px;
+        padding: 2px;
     }
 
     #tekst {
-        font-size: 15px;
+        font-size: 13px;
     }
 
     #plus-knop {
-        padding: 8px 15px;
+        padding: 6px 12px;
+        font-size: 16px;
     }
 }
 
