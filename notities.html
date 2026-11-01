@@ -8,7 +8,6 @@
 <title>HS4S Snelle Notitie</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
@@ -39,6 +38,7 @@ h2 {
 }
 
 /* Invoerregel */
+
 .invoer-regel {
     display: flex;
     align-items: stretch;
@@ -46,18 +46,17 @@ h2 {
     gap: 6px;
 }
 
-/* Wit invoervak zoals bij weerbericht */
 #tekst {
     flex: 1;
     width: 100%;
     min-width: 0;
-    padding: 6px;
+    padding: 8px;
     border: 1px solid #aaa;
     border-radius: 4px;
     background: #ffffff;
     color: #333333;
     font-family: Arial, sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     outline: none;
 }
 
@@ -66,7 +65,8 @@ h2 {
     opacity: 1;
 }
 
-/* Grijze plusknop */
+/* Plus- en opslaanknop */
+
 #plus-knop {
     appearance: none;
     -webkit-appearance: none;
@@ -75,9 +75,9 @@ h2 {
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 6px 12px;
+    padding: 6px 14px;
     font-family: Arial, sans-serif;
-    font-size: 12px;
+    font-size: 15px;
     cursor: pointer;
     transition: background 0.2s;
 }
@@ -86,48 +86,84 @@ h2 {
     background: #636363;
 }
 
+/* Annuleerknop */
+
+#annuleer-knop {
+    display: none;
+    background: #777777;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#annuleer-knop:hover {
+    background: #555555;
+}
+
 /* Notitielijst */
+
 ul {
     padding: 0;
-    margin: 12px 0 0 0;
+    margin: 14px 0 0 0;
     width: 100%;
 }
 
 li {
     list-style: none;
-    padding: 4px 0;
-    margin: 0;
-    border-bottom: 1px solid rgba(120,120,120,0.35);
+    width: 100%;
+    padding: 10px 12px;
+    margin: 0 0 9px 0;
+
+    background: rgba(147,147,147,0.12);
+    border: 1px solid rgba(147,147,147,0.40);
+    border-radius: 6px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    min-height: 28px;
+    gap: 10px;
+
+    min-height: 42px;
 }
 
 .notitie-tekst {
     flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-/* Prullenmand zonder kader */
+/* Knoppen rechts */
+
+.notitie-acties {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.bewerken,
 .verwijder {
     display: inline-block;
-    flex-shrink: 0;
     cursor: pointer;
     border: none;
     background: transparent;
-    padding: 2px 0;
+    padding: 2px;
     margin: 0;
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1;
 }
 
+.bewerken:hover,
 .verwijder:hover {
     opacity: 0.6;
 }
 
+.bewerken:focus-visible,
 .verwijder:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
@@ -155,6 +191,11 @@ li {
     type="button"
     onclick="toevoegen()">+</button>
 
+<button
+    id="annuleer-knop"
+    type="button"
+    onclick="annuleerBewerken()">✕</button>
+
 </div>
 
 <ul id="lijst"></ul>
@@ -167,12 +208,18 @@ let notities = JSON.parse(
     localStorage.getItem("HS4S_notities")
 ) || [];
 
+let bewerkIndex = null;
+
+/* Opslaan */
+
 function opslaan() {
     localStorage.setItem(
         "HS4S_notities",
         JSON.stringify(notities)
     );
 }
+
+/* Notities tonen */
 
 function tonen() {
 
@@ -187,59 +234,148 @@ function tonen() {
         tekst.className = "notitie-tekst";
         tekst.textContent = item;
 
-        let verwijder = document.createElement("span");
-        verwijder.className = "verwijder";
-        verwijder.textContent = "🗑";
+        // Knoppen samenvoegen
 
-        verwijder.setAttribute("role", "button");
-        verwijder.setAttribute("tabindex", "0");
-        verwijder.setAttribute(
-            "aria-label", "Notitie verwijderen"
-        );
+        let acties = document.createElement("div");
+        acties.className = "notitie-acties";
+
+        // Bewerken
+
+        let bewerken = document.createElement("button");
+        bewerken.className = "bewerken";
+        bewerken.type = "button";
+        bewerken.textContent = "✏️";
+        bewerken.setAttribute("aria-label", "Notitie bewerken");
+
+        bewerken.onclick = function() {
+            startBewerken(index);
+        };
+
+        // Verwijderen
+
+        let verwijder = document.createElement("button");
+        verwijder.className = "verwijder";
+        verwijder.type = "button";
+        verwijder.textContent = "🗑";
+        verwijder.setAttribute("aria-label", "Notitie verwijderen");
 
         verwijder.onclick = function() {
             wissen(index);
         };
 
-        verwijder.onkeydown = function(event) {
-            if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                wissen(index);
-            }
-        };
+        acties.appendChild(bewerken);
+        acties.appendChild(verwijder);
 
         li.appendChild(tekst);
-        li.appendChild(verwijder);
+        li.appendChild(acties);
+
         lijst.appendChild(li);
     });
 }
 
+/* Nieuwe notitie toevoegen of bewerken opslaan */
+
 function toevoegen() {
 
     let veld = document.getElementById("tekst");
+    let nieuweTekst = veld.value.trim();
 
-    if (veld.value.trim() !== "") {
-
-        notities.push(veld.value);
-        opslaan();
-
-        veld.value = "";
-        tonen();
-        veld.focus();
+    if (nieuweTekst === "") {
+        return;
     }
+
+    if (bewerkIndex !== null) {
+
+        // Bestaande notitie aanpassen
+        notities[bewerKIndex()] = nieuweTekst;
+
+    } else {
+
+        // Nieuwe notitie toevoegen
+        notities.push(nieuweTekst);
+
+    }
+
+    opslaan();
+
+    veld.value = "";
+    stopBewerken();
+    tonen();
+
+    veld.focus();
 }
 
+/* Bewerken starten */
+
+function startBewerken(index) {
+
+    let veld = document.getElementById("tekst");
+
+    bewerkIndex = index;
+
+    veld.value = notities[index];
+    veld.placeholder = "Notitie bewerken...";
+
+    document.getElementById("plus-knop").textContent = "✓";
+    document.getElementById("annuleer-knop").style.display = "block";
+
+    veld.focus();
+}
+
+/* Bewerken annuleren */
+
+function annuleerBewerken() {
+
+    document.getElementById("tekst").value = "";
+
+    stopBewerken();
+
+}
+
+/* Bewerken afsluiten */
+
+function stopBewerken() {
+
+    bewerkIndex = null;
+
+    document.getElementById("tekst").placeholder = "Nieuwe notitie...";
+    document.getElementById("plus-knop").textContent = "+";
+    document.getElementById("annuleer-knop").style.display = "none";
+
+}
+
+function bewerKIndex() {
+    return bewerkIndex;
+}
+
+/* Enter gebruiken */
+
 function enterToevoegen(event) {
+
     if (event.key === "Enter") {
+        event.preventDefault();
         toevoegen();
     }
 }
 
+/* Notitie verwijderen */
+
 function wissen(index) {
+
     notities.splice(index, 1);
+
+    if (bewerkIndex === index) {
+        document.getElementById("tekst").value = "";
+        stopBewerken();
+    } else if (bewerkIndex !== null && index < bewerkIndex) {
+        bewerkIndex--;
+    }
+
     opslaan();
     tonen();
 }
+
+/* Starten */
 
 tonen();
 
